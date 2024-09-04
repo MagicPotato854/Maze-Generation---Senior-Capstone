@@ -7,8 +7,6 @@ PROGRAMMER: Mason Kohler
 
 from random import randint
 
-from main import print_maze
-
 
 def generate(width, height, hori_walls, vert_walls):
      """
@@ -62,7 +60,6 @@ def generate(width, height, hori_walls, vert_walls):
           # Add the new walls to the list of viable walls
           for inner_list in get_cell_walls(wall[3], wall[4], width, height):
                wall_list.append(inner_list)
-          print_maze(hori_walls, vert_walls, width, height)
 
 
 def get_cell_walls(row, col, width, height):
