@@ -5,6 +5,9 @@ DATE WRITTEN: 8/21/24
 PROGRAMMER: Mason Kohler
 """
 import prim_maze
+import os
+
+from PIL import Image, ImageDraw
 
 
 def main():
@@ -41,7 +44,9 @@ def main():
      
      print("Generating maze...")
      prim_maze.generate(width, height, hori_walls, vert_walls)
-     print_maze(hori_walls, vert_walls, width, height)
+     print("Maze generated! Would you like to do?")
+     create_maze_image(hori_walls, vert_walls, width, height, "maze.png")
+     # print_maze(hori_walls, vert_walls, width, height)
 
 
 def print_maze(hori_walls, vert_walls, width, height):
@@ -82,6 +87,52 @@ def print_maze(hori_walls, vert_walls, width, height):
      for col in range(width):
           print("+" + is_wall_hori(row + 1, col), end="")
      print("+")
+
+
+def create_maze_image(hori_walls, vert_walls, width, height, name):
+     """
+     Creates a file that is an image of the maze in a given format.
+     returns: 0 for success or 1 for failure
+     """
+     # Create a new image with a white background and a drawing object for the image
+     image = Image.new("RGB", (width * 10, height * 10), "white")
+     draw = ImageDraw.Draw(image)
+
+     # Draw the maze
+     for row in range(height):
+          for col in range(width):
+               if hori_walls[row][col]:
+                    draw.rectangle((col * 10, row * 10 - 1, (col + 1) * 10, row * 10 + 1), fill="black")
+               if vert_walls[row][col]:
+                    draw.rectangle((col * 10 - 1, row * 10, col * 10 + 1, (row + 1) * 10), fill="black")
+     
+     # Check if the file exists and ask the user if they want to replace it or change the name of the 
+     # file containing the maze.
+     done = False
+     """
+     while True:
+          if os.path.exists(f"{name}"):
+               while True:
+                    print(f"The file {name} already exists, would you like to replace it? (y/n)")
+                    check = input(">> ")
+                    if check[0].lower() == 'y':
+                         done = True
+                         break
+                    elif check[0].lower() == 'n':
+                         print("What do you want to name the file?")
+                         name = input(">> ")
+                         break
+          if done: break
+     """
+
+     try:
+          image.save(f"{name}")
+     except ValueError as file_ext:
+          print(f"The file extension {str(file_ext)[25:]} is not supported.")
+          return 1
+     return 0
+               
+
 
 
 if __name__ == "__main__":
