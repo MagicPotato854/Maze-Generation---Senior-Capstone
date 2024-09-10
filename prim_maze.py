@@ -1,7 +1,7 @@
 """
 PROGRAM NAME: prim_maze.py
 PROGRAM PURPOSE: This program will generate a maze using prim's algorithm
-DATE WRITTEN: 8/22/24
+DATE WRITTEN: 8/22/24 - 9/10/24
 PROGRAMMER: Mason Kohler
 """
 
