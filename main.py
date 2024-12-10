@@ -110,34 +110,57 @@ def print_maze(hori_walls, vert_walls, width, height):
 
 
 def create_maze_image(hori_walls, vert_walls, width, height, name):
-     """
-     Creates a file that is an image of the maze in a given format.
-     returns: 0 for success or 1 for failure
-     """
-     # Create a new image with a white background and a drawing object for the image
-     image = Image.new("RGBA", (width * 10 + 1, height * 10 + 1), (255, 255, 255, 255))
-     draw = ImageDraw.Draw(image)
+    """
+    Creates a file that is an image of the maze in a given format.
+    returns: 0 for success or 1 for failure
+    """
+    # Create a new image with a white background and a drawing object for the image
+    scale = 100
+    wall_width = scale // 10  # Wall width scales with the size of the image
+    image = Image.new("RGBA", (width * scale + 1, height * scale + 1), (255, 255, 255, 255))
+    draw = ImageDraw.Draw(image)
 
-     # Draw the maze
-     for row in range(height):
-          for col in range(width):
-               if hori_walls[row][col]:
-                    draw.rectangle((col * 10, row * 10 - 1, (col + 1) * 10, row * 10 + 1), fill="black")
-               if vert_walls[row][col]:
-                    draw.rectangle((col * 10 - 1, row * 10, col * 10 + 1, (row + 1) * 10), fill="black")
-               if hori_walls[row + 1][col]:
-                    draw.rectangle((col * 10, (row + 1) * 10 - 1, (col + 1) * 10, (row + 1) * 10 + 1), fill="black")
-               if vert_walls[row][col + 1]:
-                    draw.rectangle(((col + 1) * 10 - 1, row * 10, (col + 1) * 10 + 1, (row + 1) * 10), fill="black")
+    # Draw the maze
+    for row in range(height):
+        for col in range(width):
+            if hori_walls[row][col]:
+                draw.rectangle(
+                    (col * scale, row * scale - wall_width,
+                     (col + 1) * scale, row * scale + wall_width),
+                    fill="black"
+                )
+            if vert_walls[row][col]:
+                draw.rectangle(
+                    (col * scale - wall_width, row * scale,
+                     col * scale + wall_width, (row + 1) * scale),
+                    fill="black"
+                )
+            if hori_walls[row + 1][col]:
+                draw.rectangle(
+                    (col * scale, (row + 1) * scale - wall_width,
+                     (col + 1) * scale, (row + 1) * scale + wall_width),
+                    fill="black"
+                )
+            if vert_walls[row][col + 1]:
+                draw.rectangle(
+                    ((col + 1) * scale - wall_width, row * scale,
+                     (col + 1) * scale + wall_width, (row + 1) * scale),
+                    fill="black"
+                )
+            # Draw a small red dot at the cell's center
+            draw.ellipse(
+                (col * scale - wall_width, row * scale - wall_width,
+                 col * scale + wall_width, row * scale + wall_width),
+                fill='red'
+            )
 
-     # Save the image of the maze to the named file
-     # If the file name doesn't work, return an error
-     try:
-          image.save(f"{name}")
-     except ValueError as file_ext:
-          print(f"The file extension {str(file_ext)[25:]} is not supported.")
-          return 1
-     return 0
+    # Save the image of the maze to the named file
+    try:
+        image.save(f"{name}")
+    except ValueError as file_ext:
+        print(f"The file extension {str(file_ext)[25:]} is not supported.")
+        return 1
+    return 0
                
 
 if __name__ == "__main__":
